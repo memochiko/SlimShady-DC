@@ -34,12 +34,12 @@ for (const file of commandFiles) {
         client.commands.set(command.data.name, command);
         commandsForDeploy.push(command.data.toJSON());
     } else {
-        console.warn(`[WARN] El comando en ${filePath} no tiene las propiedades "data" o "execute" requeridas.`);
+        console.warn(`[ADVERTENCIA] El comando en ${filePath} no tiene las propiedades "data" o "execute" requeridas.`);
     }
 }
 
 const systemsPath = path.join(__dirname, 'systems');
-const systemFiles = fs.readdirSync(systemsPath).filter(file => file.endsWith('.js') && file !== 'subBotManager.js');
+const systemFiles = fs.readdirSync(systemsPath).filter(file => file.endsWith('.js') && file !== 'subBotManager.js'); // Excluir subBotManager aquí, ya se importó arriba
 
 for (const file of systemFiles) {
     const filePath = path.join(systemsPath, file);
@@ -49,9 +49,9 @@ for (const file of systemFiles) {
 
 
 client.once('ready', async () => {
-    console.log(`¡Slim Shady está en línea! Logueado como ${client.user.tag}`);
+    console.log(`¡Slim Shaidy está en línea! Logueado como ${client.user.tag}`);
 
-    client.user.setActivity(`${client.guilds.cache.size} servidores`, { type: 3 });
+    client.user.setActivity(`${client.guilds.cache.size} servidores`, { type: 3 }); // 3 = Watching
 
     const rest = new REST({ version: '10' }).setToken(config.token);
 
@@ -113,9 +113,9 @@ const welcomeSystem = require('./systems/welcome.js');
 const farewellSystem = require('./systems/farewell.js');
 const boostSystem = require('./systems/boost.js');
 
-client.on('guildMemberAdd', member => welcomeSystem.execute(member, client));
-client.on('guildMemberRemove', member => farewellSystem.execute(member, client));
-client.on('guildMemberUpdate', (oldMember, newMember) => boostSystem.execute(oldMember, newMember, client));
+client.on('guildMemberAdd', member => welcomeSystem.execute(member, client, systemStateManager));
+client.on('guildMemberRemove', member => farewellSystem.execute(member, client, systemStateManager));
+client.on('guildMemberUpdate', (oldMember, newMember) => boostSystem.execute(oldMember, newMember, client, systemStateManager));
 
 const shutdown = async () => {
     console.log('Detectada señal de apagado. Deteniendo sub-bots...');
