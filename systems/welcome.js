@@ -1,33 +1,48 @@
+// systems/welcome.js
 const { EmbedBuilder } = require('discord.js');
 const config = require('../config.js');
+const systemStateManager = require('./systemStateManager.js'); // Importa el gestor de estados
 
 module.exports = {
-    async execute(member, client) {
-        if (member.user.bot) return;
+    /**
+     * Ejecuta el sistema de bienvenida cuando un miembro se une.
+     * @param {GuildMember} member - El miembro que se unió.
+     * @param {Client} client - La instancia del cliente del bot principal.
+     */
+    execute: async (member, client) => {
+        // Verifica si el sistema de bienvenida está activado
+        if (!systemStateManager.getState('welcome')) {
+            return; // Si está desactivado, no hace nada
+        }
 
-        const welcomeChannel = member.guild.channels.cache.get(config.welcomeChannelId);
+        const welcomeChannelId = config.welcomeChannelId;
+        if (!welcomeChannelId) {
+            console.warn('[WelcomeSystem] ID del canal de bienvenida no configurado en config.js. Saltando bienvenida.');
+            return;
+        }
 
-        if (!welcomeChannel) {
-            console.warn(`[ADVERTENCIA] No se encontró el canal de bienvenida (ID: ${config.welcomeChannelId}).`);
+        const channel = member.guild.channels.cache.get(welcomeChannelId);
+        if (!channel) {
+            console.error(`[WelcomeSystem] No se encontró el canal de bienvenida con ID: ${welcomeChannelId}`);
             return;
         }
 
         const embed = new EmbedBuilder()
-            .setColor('#2ecc71')
-            .setTitle(`🎉 ¡Bienvenido al servidor, ${member.user.username}!`)
-            .setDescription(`¡Nos alegra tenerte aquí, <@${member.user.id}>!\nEres el miembro número **${member.guild.memberCount}** de este servidor.`)
+            .setColor('#2ECC71') // Verde para bienvenida
+            .setTitle('👋 ¡Bienvenido al Servidor!')
+            .setDescription(`¡Bienvenido a ${member.guild.name}, **${member.user.tag}**! ¡Esperamos que disfrutes tu estancia!`)
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 256 }))
             .addFields(
-                { name: 'Lee las reglas', value: 'Asegúrate de revisar el canal de <#1377655004671770736>.' }, // EDITA EL ID DEL CANAL
-                { name: 'Diviértete', value: '¡Esperamos que disfrutes tu estancia!' }
+                { name: 'Miembro', value: `${member.user}`, inline: true },
+                { name: 'Número de Miembros', value: `${member.guild.memberCount}`, inline: true }
             )
             .setTimestamp()
-            .setFooter({ text: 'Slim Shady Bot' });
+            .setFooter({ text: 'Slim Shaidy Bot' });
 
         try {
-            await welcomeChannel.send({ embeds: [embed] });
+            await channel.send({ embeds: [embed] });
         } catch (error) {
-            console.error(`Error al enviar mensaje de bienvenida en el canal ${welcomeChannel.name}:`, error);
+            console.error(`[WelcomeSystem] Error al enviar mensaje de bienvenida al canal ${channel.name}:`, error);
         }
     },
 };
