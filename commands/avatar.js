@@ -16,7 +16,7 @@ module.exports = {
             .setTitle(`🖼️ Avatar de ${user.username}`)
             .setImage(user.displayAvatarURL({ dynamic: true, size: 1024 }))
             .setTimestamp()
-            .setFooter({ text: 'Slim Shaidy Bot' });
+            .setFooter({ text: 'Slim Shady Bot' });
 
         await interaction.reply({ embeds: [embed] });
     },
