@@ -1,0 +1,20 @@
+{
+  "name": "slimshadybot",
+  "version": "1.0.0",
+  "description": "Un bot de Discord llamado Slim Shady",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "deploy-commands": "node deploy-commands.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.15.3",
+    "@discordjs/rest": "^1.7.1",
+    "discord-api-types": "^0.37.81",
+    "node-fetch": "^2.6.1",
+	"qrcode": "^1.5.3"
+  }
+}
