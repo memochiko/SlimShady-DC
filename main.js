@@ -7,6 +7,7 @@ const path = require('node:path');
 const config = require('./config.js');
 // Importa el nuevo sistema de gestión de sub-bots
 const subBotManager = require('./systems/subBotManager.js');
+const systemStateManager = require('./systems/systemStateManager.js');
 
 const client = new Client({
     intents: [
